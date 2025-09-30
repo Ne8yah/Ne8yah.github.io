@@ -1,357 +1,484 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="icon" type="image/png" href="favicon.png">
-  <title>funni thing</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap');
-    :root {
-      --bg:#0b0f16;
-      --neon:#b6b6b6;
-      --accent:#636363;
-      --muted:#ffffff;
-    }
-    
-    * { box-sizing:border-box; }
-    html, body { height:100%; margin:0; }
-    body {
-      font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-      color:#ffffff;
-      overflow:hidden;
-    }
-    .bg-media {
-      position:fixed;
-      inset:0;
-      z-index:-2;
-      object-fit:cover;
-      width:100%;
-      height:100%;
-    }
-    .stage {
-      position:relative;
-      min-height:100vh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:48px;
-      perspective:1200px;
-    }
-    .grid-bg {
-      position:absolute;
-      inset:0;
-      background-image:linear-gradient(transparent 24px, rgba(255,255,255,0.02) 25px),
-                       linear-gradient(90deg, transparent 24px, rgba(255,255,255,0.02) 25px);
-      background-size:25px 25px;
-      opacity:0.3;
-      z-index:-1;
-    }
-    .card {
-      position:relative;
-      max-width:860px;
-      width:100%;
-      padding:36px;
-      border-radius:14px;
-      background:rgba(0, 0, 0, 0.06);
-      border:1px solid rgba(255,255,255,0.1);
-      box-shadow:0 20px 50px rgba(0,0,0,0.6);
-      backdrop-filter:blur(15px);
-      -webkit-backdrop-filter:blur(10px);
-      transition:transform 0.15s ease, box-shadow 0.3s ease;
-      animation: fadeInUp 1.2s ease both;
-    }
-    @keyframes fadeInUp {
-      from { opacity:0; transform:translateY(40px) scale(0.95); }
-      to { opacity:1; transform:translateY(0) scale(1); }
-    }
-    .avatar {
-      width:78px;
-      height:78px;
-      border-radius:14px;
-      box-shadow:0 20px 50px rgba(0,0,0,0.6);
-      overflow:hidden;
-      float:left;
-      margin-right:20px;
-      animation: fadeIn 1.2s ease 0.3s both;
-    }
-    .avatar img {
-      width:100%;
-      height:100%;
-      box-shadow:0 20px 50px rgba(0,0,0,0.6);
-      object-fit:cover;
-    }
-    .handle { margin:0; padding:6px 0; font-size:28px; letter-spacing:0.6px; }
-    .tag { font-size:12px; color:var(--muted); margin-left:8px; }
-    .bio { margin-top:8px; color:var(--muted); line-height:1.6; animation: fadeIn 1s ease 0.5s both; }
-    .pane { margin-top:18px; padding-top:14px; border-top:1px dashed rgba(255,255,255,0.1); }
-    .pane h2 { margin:0 0 8px 0; font-size:14px; color:var(--neon); }
-    .loadout { list-style:none; padding:0; margin:0; color:#cfeef0; }
-    .loadout li { padding:6px 0; }
-    .stats { display:flex; gap:18px; }
-    .stat {
-      background:rgba(255,255,255,0.05);
-      padding:10px 14px;
-      border-radius:8px;
-      color:var(--muted);
-      text-align:center;
-      transition:transform 0.3s ease;
-    }
-    .stat strong { display:block; font-size:18px; color:#fff; }
-    .stat small { display:block; font-size:11px; color:rgba(255,255,255,0.35); }
-    .stat:hover { transform:scale(1.05); }
-    .links { display:flex; gap:12px; padding:0; margin:0; list-style:none; }
-    .links a {
-      color:var(--neon);
-      text-decoration:none;
-      padding-bottom:2px;
-      transition:color 0.3s ease;
-    }
-    .footer { margin-top:20px; color:rgba(255,255,255,0.4); font-size:13px; }
-    .noise { position:absolute; inset:0; z-index:-1; width:100%; height:100%; pointer-events:none; }
-    @keyframes fadeIn {
-      from { opacity:0; transform:translateY(20px); }
-      to { opacity:1; transform:translateY(0); }
-    }
-    /* Custom Music Player */
-    .custom-controls {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-top: 12px;
-    }
-    .custom-controls button {
-      background: var(--neon);
-      border: none;
-      padding: 6px 12px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 14px;
-      color: #000;
-      font-weight: bold;
-      transition: background 0.3s ease, transform 0.2s ease;
-    }
-    .custom-controls button:hover {
-      background: var(--accent);
-      color: #fff;
-      transform: scale(1.05);
-    }
-    .custom-controls input[type="range"] {
-      -webkit-appearance: none;
-      appearance: none;
-      height: 6px;
-      border-radius: 4px;
-      background: rgba(255,255,255,0.1);
-      cursor: pointer;
-      flex: 1;
-    }
-    .typewriter {
-      border-right: 2px solid var(--neon);
-      white-space: nowrap;
-      overflow: hidden;
-      display: inline-block;
-      animation: blink 0.7s infinite;
-    }
-    @keyframes blink {
-      50% { border-color: transparent; }
-    }
-    .custom-controls input[type="range"]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      background: var(--neon);
-      cursor: pointer;
-      transition: background 0.3s ease, transform 0.2s ease;
-    }
-    .custom-controls input[type="range"]::-webkit-slider-thumb:hover {
-      background: var(--accent);
-      transform: scale(1.2);
-    }
-    .custom-controls input[type="range"]::-moz-range-thumb {
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      background: var(--neon);
-      border: none;
-      cursor: pointer;
-    }
-    @media (max-width:640px) {
-      .card { padding:20px; }
-      .avatar { float:none; margin:0 0 12px 0; }
-    }
-    .autoplay-message {
-      color: var(--neon);
-      font-size: 14px;
-      margin-top: 10px;
-      text-align: center;
-    }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/png" href="assets/pics/favicon.png">
+<title>Ne8yah</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap');
+:root {
+  --bg:#0b0f16;
+  --neon:#b6b6b6;
+  --accent:#636363;
+  --muted:#ffffff;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{
+  font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  color:#ffffff;
+  overflow:hidden;
+}
+.start-screen{
+  position:fixed;
+  inset:0;
+  background:radial-gradient(circle at center,rgba(20,20,25,0.9) 0%,rgba(0,0,0,0.85) 100%);
+  backdrop-filter:blur(30px);
+  -webkit-backdrop-filter:blur(30px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+  transition:opacity 1s ease-in-out, transform 1s ease-in-out;
+}
+.start-content h1{
+  color:var(--neon);
+  font-size:32px;
+  letter-spacing:1.5px;
+  text-align:center;
+  text-shadow:0 0 8px rgba(182,182,182,0.8);
+  cursor:pointer;
+  animation:pulse 1.6s infinite;
+  transition:transform 0.3s ease;
+}
+.start-content h1:hover{transform:scale(1.05);}
+@keyframes pulse{0%,100%{opacity:0.65}50%{opacity:1}}
+.start-screen.fade-out{opacity:0;transform:scale(1.05);pointer-events:none}
+.bg-media{position:fixed;inset:0;z-index:-2;object-fit:cover;width:100%;height:100%;}
+.stage{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;perspective:1200px;}
+.grid-bg{position:absolute;inset:0;background-image:linear-gradient(transparent 24px, rgba(255,255,255,0.02) 25px),linear-gradient(90deg, transparent 24px, rgba(255,255,255,0.02) 25px);background-size:25px 25px;opacity:0.3;z-index:-1;}
+.card {
+  position: relative;
+  max-width: 860px;
+  width: 100%;
+  padding: 36px;
+  border-radius: 14px;
+  background: rgba(0,0,0,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(10px);
+  animation: fadeInUp 1.5s ease-in-out both;
+  transform-style: preserve-3d;
+}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(40px) scale(0.95);}to{opacity:1;transform:translateY(0) scale(1);}}
+.avatar{width:120px;height:120px;border-radius:100px;box-shadow:0 20px 50px rgba(0,0,0,0.6);overflow:hidden;float:left;margin-right:20px;}
+.avatar-glow {
+  box-shadow: 0 0 20px rgba(182, 182, 182, 0.8);
+  transition: box-shadow 0.3s ease-in-out;
+}
+.avatar img{width:100%;height:100%;object-fit:cover;}
+.avatar:hover {
+  transform: scale(1.05);
+  rotate: 1260deg;
+  transition: all 0.7s ease-in-out;
+}
+.name-container {
+  margin-top: 8px;
+  min-height: 60px;
+}
+.handle{
+  margin:0;
+  padding:6px 0;
+  font-size:28px;
+  letter-spacing:0.6px;
+  white-space:nowrap;
+  overflow:hidden;
+}
+.bio-container {
+  margin-top: 24px;
+  min-height: 40px;
+}
+.bio{
+  margin:0;
+  color:var(--muted);
+  line-height:1.6;
+  display:flex;
+  align-items:center;
+}
+.pane{margin-top:18px;padding-top:14px;border-top:1px dashed rgba(255,255,255,0.1);}
+.pane h2{margin:0 0 8px 0;font-size:14px;color:var(--neon);}
+.loadout{list-style:none;padding:0;margin:0;color:#cfeef0;}
+.loadout li{padding:6px 0;}
+.stats{display:flex;gap:18px;}
+.stat{background:rgba(255,255,255,0.05);padding:10px 14px;border-radius:8px;color:var(--muted);text-align:center;transition:transform 0.3s ease;}
+.stat strong{display:block;font-size:18px;color:#fff;}
+.stat small{display:block;font-size:11px;color:rgba(255,255,255,0.35);}
+.stat:hover{transform:scale(1.05);}
+.links{display:flex;gap:12px;padding:0;margin:0;list-style:none;}
+.links a{color:var(--neon);text-decoration:none;padding-bottom:2px;transition:color 0.3s ease;}
+.footer{margin-top:20px;color:rgba(255,255,255,0.4);font-size:13px;}
+.noise{position:absolute;inset:0;z-index:-1;width:100%;height:100%;pointer-events:none}
+.custom-controls{display:flex;align-items:center;gap:12px;margin-top:12px;}
+.custom-controls button{
+  background:var(--neon);
+  border:none;
+  padding:6px 12px;
+  border-radius:6px;
+  cursor:pointer;
+  font-size:14px;
+  color:#000;
+  font-weight:bold;
+  transition:background 0.3s ease, transform 0.2s ease;
+}
+.custom-controls button:hover{background:var(--accent);color:#fff;transform:scale(1.05);}
+.custom-controls input[type="range"]{
+  -webkit-appearance:none;
+  appearance:none;
+  height:6px;
+  border-radius:4px;
+  background:rgba(255,255,255,0.1);
+  cursor:pointer;
+  flex:1;
+}
+.custom-controls input[type="range"]::-webkit-slider-thumb{
+  -webkit-appearance:none;
+  appearance:none;
+  width:14px;
+  height:14px;
+  border-radius:50%;
+  background:var(--neon);
+  cursor:pointer;
+  transition:background 0.3s ease, transform 0.2s ease;
+}
+.custom-controls input[type="range"]::-webkit-slider-thumb:hover{background:var(--accent);transform:scale(1.2);}
+.custom-controls input[type="range"]::-moz-range-thumb{
+  width:14px;
+  height:14px;
+  border-radius:50%;
+  background:var(--neon);
+  border:none;
+  cursor:pointer;
+}
+.autoplay-message{color:var(--neon);font-size:14px;margin-top:10px;text-align:center;}
+@media (max-width:768px) {
+  .card {
+    padding: 20px;
+    margin: 10px;
+    width: 90%;
+  }
+  .avatar {
+    width: 80px;
+    height: 80px;
+    margin-right: 15px;
+  }
+  .handle {
+    font-size: 24px;
+  }
+  .bio {
+    font-size: 14px;
+  }
+  .stats {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .stat {
+    padding: 8px 12px;
+  }
+  .custom-controls {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .links {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+@media (max-width:480px) {
+  .stage {
+    padding: 10px;
+  }
+  .card {
+    padding: 15px;
+    width: 95%;
+  }
+  .avatar {
+    width: 60px;
+    height: 60px;
+    margin-right: 0;
+    float: none;
+    margin-bottom: 15px;
+  }
+  .handle {
+    font-size: 20px;
+  }
+  .bio {
+    font-size: 12px;
+  }
+  .stat {
+    padding: 6px 10px;
+    min-width: 80px;
+  }
+  .custom-controls button {
+    padding: 8px 16px;
+  }
+  .links a {
+    font-size: 14px;
+  }
+}
+.typewriter {
+  position: relative;
+  display: inline-block;
+}
+.typewriter::after {
+  content: '|';
+  position: absolute;
+  right: -0.2em;
+  animation: blink 0.8s step-end infinite;
+  color: var(--neon);
+}
+@keyframes blink {
+  0%,100% { opacity:1; }
+  50%     { opacity:0; }
+}
+.shaking {
+  animation: shake 0.15s infinite;
+}
+@keyframes shake {
+  0% { transform:translate(0,0); }
+  25%{ transform:translate(-1px,1px); }
+  50%{ transform:translate(1px,-1px); }
+  75%{ transform:translate(-1px,-1px); }
+ 100%{ transform:translate(1px,1px); }
+}
+</style>
 </head>
 <body>
-  <video class="bg-media" id="bgVideo" autoplay loop playsinline muted playbackRate="1.5">
-    <source src="background.mp4" type="video/mp4">
-    <img src="background.jpg" alt="Background">
-  </video>
-  <div class="stage">
-    <div class="grid-bg"></div>
-    <main class="card" id="card">
-      <div class="avatar">
-        <img src="avatar.png" alt="Avatar">
-      </div>
-      <h1 class="handle">Ne8 <span class="tag"></span></h1>
-      <p class="bio" id="bio1"></p>
-      <section class="pane">
-        <h2>Cool stuff</h2>
-        <ul class="loadout">
-          <li>Favorite: python</li>
-          <li>Learning: C#</li>
-          <li>Easiest: HTML & CSS</li>
-        </ul>
-      </section>
-      <section class="pane">
-        <h2>Stats</h2>
-        <div class="stats">
-          <div class="stat"><strong>~5</strong><span> Months</span><small>exp</small></div>
-          <div class="stat">some<span> bugs</span><small>fixed</small></div>
-          <div class="stat">2<span> showers</span><small>this year...</small></div>
-        </div>
-      </section>
-      <section class="pane">
-        <h2>Where to find me</h2>
-        <ul class="links">
-          <a>Discord: @ne8yah</a>
-        </ul>
-      </section>
-      <section class="pane music-player">
-        <audio id="player" loop>
-          <source src="background_music2.mp3" type="audio/mpeg">
-          Your browser does not support the audio element.
-        </audio>
-        <div class="custom-controls">
-          <button id="playPause">▶</button>
-          <input type="range" id="progress" min="0" max="100" value="0" step="0.1">
-          <input type="range" id="volume" min="0" max="1" step="0.01" value="0.5">
-        </div>
-        <div id="autoplayMessage" class="autoplay-message" style="display: none;">
-          Click anywhere to start music
-        </div>
-      </section>
-    </main>
-    <svg class="noise" viewBox="0 0 800 600" preserveAspectRatio="none" aria-hidden>
-      <defs>
-        <filter id="grain"><feTurbulence baseFrequency="0.9" numOctaves="2" /></filter>
-      </defs>
-      <rect width="100%" height="100%" filter="url(#grain)" opacity="0.03"/>
-    </svg>
+<div id="startScreen" class="start-screen">
+  <div class="start-content">
+    <h1>Tap to Continue…</h1>
   </div>
-  <script>
-  const card = document.getElementById("card");
-  document.addEventListener("mousemove", (e) => {
-    let x = (window.innerWidth / 2 - e.pageX) / 40;
-    let y = (window.innerHeight / 2 - e.pageY) / 40;
-    card.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
-  });
-  document.addEventListener("mouseleave", () => {
-    card.style.transform = "rotateY(0deg) rotateX(0deg)";
-  });
-  document.addEventListener('DOMContentLoaded', () => {
-    const video = document.getElementById('bgVideo');
-    video.playbackRate = 1.5;
-  });
-  const player = document.getElementById("player");
-  const playPauseBtn = document.getElementById("playPause");
-  const progress = document.getElementById("progress");
-  const volumeSlider = document.getElementById("volume");
-  const autoplayMessage = document.getElementById("autoplayMessage");
-
-
-  function attemptAutoplay() {
-    player.volume = 0.1; 
-    player.play()
-      .then(() => {
-        playPauseBtn.textContent = "⏸";
-
-        let volume = 0.1;
-        const fadeIn = setInterval(() => {
-          volume += 0.05;
-          if (volume >= 0.5) {
-            volume = 0.5;
-            clearInterval(fadeIn);
-          }
-          player.volume = volume;
-          volumeSlider.value = volume;
-        }, 200);
-      })
-      .catch(error => {
-        console.log("Autoplay prevented:", error);
-        autoplayMessage.style.display = "block";
-        playPauseBtn.textContent = "▶";
-      });
-  }
-
-
-  window.addEventListener('load', attemptAutoplay);
-
-
-  document.addEventListener('click', attemptAutoplay, { once: true });
-
-  playPauseBtn.addEventListener("click", () => {
-    if (player.paused) {
-      player.play()
-        .then(() => {
-          playPauseBtn.textContent = "⏸";
-          autoplayMessage.style.display = "none";
-        })
-        .catch(error => {
-          console.log("Playback failed:", error);
-          alert("Playback failed. Please check your browser settings.");
-        });
-    } else {
-      player.pause();
-      playPauseBtn.textContent = "▶";
+</div>
+<video class="bg-media" id="bgVideo" autoplay loop playsinline muted>
+  <source src="background.mp4" type="video/mp4">
+  <img src="background.jpg" alt="Background">
+</video>
+<div class="stage">
+  <div class="grid-bg"></div>
+  <main class="card" id="card">
+    <div class="avatar avatar-glow"><img src="assets/pics/avatar.png" alt="Avatar"></div>
+    <div class="name-container">
+      <h1 class="handle typewriter" id="nameType"></h1>
+    </div>
+    <div class="bio-container">
+      <p class="bio typewriter" id="bio1"></p>
+    </div>
+    <section class="pane">
+      <h2>Cool stuff</h2>
+      <ul class="loadout">
+        <li>Favorite: python</li>
+        <li>Learning: C#</li>
+        <li>Easiest: HTML & CSS</li>
+      </ul>
+    </section>
+    <section class="pane">
+      <h2>Stats</h2>
+      <div class="stats">
+        <div class="stat"><strong>~5</strong><span> Months</span><small>exp</small></div>
+        <div class="stat"><strong>Some</strong><span>bugs</span><small>fixed</small></div>
+        <div class="stat"><strong>2 showers</strong>this year... <small>Not really.</small></div>
+      </div>
+    </section>
+    <section class="pane">
+      <h2>Where to find me</h2>
+      <ul class="links">
+        <a>Discord: @ne8yah</a>
+      </ul>
+    </section>
+    <section class="pane">
+      <h2>About Me</h2>
+      <p class="bio">I love coding in Python and learning new languages like C#. When I'm not coding, you can find me playing video games or hanging out with friends.</p>
+    </section>
+    <section class="pane music-player">
+      <audio id="player" loop>
+        Your browser does not support the audio element.
+      </audio>
+      <div class="custom-controls">
+        <button id="playPause">▶</button>
+        <input type="range" id="progress" min="0" max="100" value="0" step="0.1">
+        <input type="range" id="volume" min="0" max="1" step="0.01" value="0.5">
+      </div>
+      <div id="autoplayMessage" class="autoplay-message" style="display:none;">
+        Click anywhere to start music
+      </div>
+    </section>
+  </main>
+  <svg class="noise" viewBox="0 0 800 600" preserveAspectRatio="none" aria-hidden>
+    <defs><filter id="grain"><feTurbulence baseFrequency="0.9" numOctaves="2" /></filter></defs>
+    <rect width="100%" height="100%" filter="url(#grain)" opacity="0.03"/>
+  </svg>
+</div>
+<script>
+const musicFiles = [
+  "assets/music/background_music0.mp3",
+  "assets/music/background_music1.mp3",
+  "assets/music/background_music2.mp3"
+];
+function getRandomMusic() {
+  const randomIndex = Math.floor(Math.random() * musicFiles.length);
+  return musicFiles[randomIndex];
+}
+const card = document.getElementById("card");
+let x = 0, y = 0;
+let targetX = 0, targetY = 0;
+const windowHalfX = window.innerWidth / 2;
+const windowHalfY = window.innerHeight / 2;
+function updatePosition() {
+  x += (targetX - x) * 0.1;
+  y += (targetY - y) * 0.1;
+  card.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
+  requestAnimationFrame(updatePosition);
+}
+document.addEventListener("mousemove", (e) => {
+  targetX = (windowHalfX - e.pageX) / 40;
+  targetY = (windowHalfY - e.pageY) / 40;
+});
+updatePosition();
+document.addEventListener("mouseleave", () => {
+  targetX = 0;
+  targetY = 0;
+});
+const player = document.getElementById("player");
+const playPauseBtn = document.getElementById("playPause");
+const progress = document.getElementById("progress");
+const volumeSlider = document.getElementById("volume");
+const autoplayMessage = document.getElementById("autoplayMessage");
+const startScreen = document.getElementById("startScreen");
+const bgVideo = document.getElementById("bgVideo");
+function fadeInMusic() {
+  let volume = 0.01;
+  player.volume = volume;
+  const fade = setInterval(() => {
+    volume += 0.01;
+    if (volume >= 0.5) {
+      volume = 0.5;
+      clearInterval(fade);
     }
+    player.volume = volume;
+    volumeSlider.value = volume;
+  }, 100);
+}
+function attemptAutoplay() {
+  player.volume = 0.01;
+  player.play().then(() => {
+    playPauseBtn.textContent = "⏸";
+    fadeInMusic();
+  }).catch(() => {
+    autoplayMessage.style.display = "block";
   });
-
-  player.addEventListener("timeupdate", () => {
-    const value = (player.currentTime / player.duration) * 100 || 0;
-    progress.value = value;
-  });
-
-  progress.addEventListener("input", (e) => {
-    const seekTime = (e.target.value / 100) * player.duration;
-    player.currentTime = seekTime;
-  });
-
-  volumeSlider.addEventListener("input", (e) => {
-    player.volume = e.target.value;
-  });
-
-  function typeWriter(elementId, text, delay = 50, callback) {
-    const el = document.getElementById(elementId);
-    let i = 0;
-    el.textContent = "";
-    el.classList.add("typewriter");
-    function type() {
-      if (i < text.length) { 
-        el.textContent += text.charAt(i);
-        i++;
-        setTimeout(type, delay);
-      } else {
-        el.classList.remove("typewriter");
-        if (callback) callback();
-      }
-    }
-    type();
-  }
-
-  document.addEventListener("DOMContentLoaded", () => {
-    typeWriter("bio1", "Right now I'm learning C#..", 90, () => {
-      setTimeout(() => {
-      }, 500);
+}
+window.addEventListener("load", () => {
+  const randomMusic = getRandomMusic();
+  player.src = randomMusic;
+  attemptAutoplay();
+});
+function startExperience() {
+  startScreen.classList.add("fade-out");
+  bgVideo.play().catch(() => {});
+  if (player.paused) {
+    player.play().then(() => {
+      playPauseBtn.textContent = "⏸";
+      fadeInMusic();
     });
-  });
+  }
+}
+startScreen.addEventListener("click", startExperience);
+playPauseBtn.addEventListener("click", () => {
+  if (player.paused) {
+    player.play();
+    playPauseBtn.textContent = "⏸";
+  } else {
+    player.pause();
+    playPauseBtn.textContent = "▶";
+  }
+});
+player.addEventListener("timeupdate", () => {
+  const value = (player.currentTime / player.duration) * 100 || 0;
+  progress.value = value;
+});
+progress.addEventListener("input", (e) => {
+  player.currentTime = (e.target.value / 100) * player.duration;
+});
+volumeSlider.addEventListener("input", (e) => {
+  player.volume = e.target.value;
+});
+player.addEventListener("error", () => {
+  console.error("Error loading audio file");
+  autoplayMessage.textContent = "Error loading audio. Please try again later.";
+  autoplayMessage.style.display = "block";
+});
+const bioMsgs = [
+  "Right now I'm learning C#..",
+  "I love coding in Python...",
+  "Web development is fun!",
+  "Building cool projects every day...",
+  "14yo creature on the line.",
+  "https://gn-math.dev"
+];
+let bIndex = 0, bChar = 0, bDir = 1;
+const bioEl = document.getElementById("bio1");
+function bioLoop() {
+  const msg = bioMsgs[bIndex];
+  if (bDir > 0) {
+    bChar += 1;
+    if (bChar > msg.length) {
+      bChar = msg.length;
+      setTimeout(() => {
+        bDir = -1;
+        bioLoop();
+      }, 1500);
+      return;
+    }
+  } else {
+    bChar -= 1;
+    if (bChar < 0) {
+      bChar = 0;
+      bIndex = (bIndex + 1) % bioMsgs.length;
+      bDir = 1;
+      setTimeout(() => {
+        bioLoop();
+      }, 500);
+      return;
+    }
+  }
+  bioEl.textContent = msg.slice(0, bChar);
+  bioEl.classList.toggle("shaking", bChar > 0 && bChar < msg.length);
+  setTimeout(bioLoop, bDir > 0 ? 80 : 40);
+}
+bioLoop();
+const names = ["Ne8", "giggleshitter", "0xNe8", "shitter.exe", "Nate", "biggie"];
+let nIndex = 0, nChar = 0, nDir = 1;
+const nameEl = document.getElementById("nameType");
+function nameLoop() {
+  const n = names[nIndex];
+  if (nDir > 0) {
+    nChar += 1;
+    if (nChar > n.length) {
+      nChar = n.length;
+      setTimeout(() => {
+        nDir = -1;
+        nameLoop();
+      }, 1000);
+      return;
+    }
+  } else {
+    nChar -= 1;
+    if (nChar < 0) {
+      nChar = 0;
+      nIndex = (nIndex + 1) % names.length;
+      nDir = 1;
+      setTimeout(() => {
+        nameLoop();
+      }, 500);
+      return;
+    }
+  }
+  nameEl.textContent = n.slice(0, nChar);
+  nameEl.classList.toggle("shaking", nChar > 0 && nChar < n.length);
+  setTimeout(nameLoop, nDir > 0 ? 120 : 90);
+}
+nameLoop();
 </script>
 </body>
 </html>
