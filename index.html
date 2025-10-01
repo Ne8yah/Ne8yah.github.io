@@ -9,7 +9,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap');
 :root {
   --bg:#0b0f16;
-  --neon:#b6b6b6;
+  --neon:#808080;
   --accent:#636363;
   --muted:#ffffff;
 }
@@ -46,31 +46,50 @@ body{
 @keyframes pulse{0%,100%{opacity:0.65}50%{opacity:1}}
 .start-screen.fade-out{opacity:0;transform:scale(1.05);pointer-events:none}
 .bg-media{position:fixed;inset:0;z-index:-2;object-fit:cover;width:100%;height:100%;}
-.stage{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;perspective:1200px;}
+.stage{
+  position:relative;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  perspective:1200px;
+  gap:90px;
+}
 .grid-bg{position:absolute;inset:0;background-image:linear-gradient(transparent 24px, rgba(255,255,255,0.02) 25px),linear-gradient(90deg, transparent 24px, rgba(255,255,255,0.02) 25px);background-size:25px 25px;opacity:0.3;z-index:-1;}
 .card {
   position: relative;
-  max-width: 860px;
+  max-width: 800px;
   width: 100%;
   padding: 36px;
-  border-radius: 14px;
-  background: rgba(0,0,0,0.06);
-  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 15px;
+  z-index: 20;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: 0 20px 50px rgba(0,0,0,0.6);
-  backdrop-filter: blur(15px);
+  backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+  gap: 15px;
+  opacity: 0;
   animation: fadeInUp 1.5s ease-in-out both;
+  transition: transform 0.5s ease-out;
   transform-style: preserve-3d;
+}
+.music-card {
+  max-width: 600px;
+  width: 80%;
+  padding: 24px;
 }
 @keyframes fadeInUp{from{opacity:0;transform:translateY(40px) scale(0.95);}to{opacity:1;transform:translateY(0) scale(1);}}
 .avatar{width:120px;height:120px;border-radius:100px;box-shadow:0 20px 50px rgba(0,0,0,0.6);overflow:hidden;float:left;margin-right:20px;}
 .avatar-glow {
-  box-shadow: 0 0 20px rgba(182, 182, 182, 0.8);
+  box-shadow: 0 0 50px rgba(114, 114, 114, 0.8);
   transition: box-shadow 0.3s ease-in-out;
 }
 .avatar img{width:100%;height:100%;object-fit:cover;}
 .avatar:hover {
-  transform: scale(1.05);
+  transform: scale(1.25);
   rotate: 1260deg;
   transition: all 0.7s ease-in-out;
 }
@@ -87,7 +106,7 @@ body{
   overflow:hidden;
 }
 .bio-container {
-  margin-top: 24px;
+  margin-top: 20px;
   min-height: 40px;
 }
 .bio{
@@ -106,8 +125,39 @@ body{
 .stat strong{display:block;font-size:18px;color:#fff;}
 .stat small{display:block;font-size:11px;color:rgba(255,255,255,0.35);}
 .stat:hover{transform:scale(1.05);}
-.links{display:flex;gap:12px;padding:0;margin:0;list-style:none;}
-.links a{color:var(--neon);text-decoration:none;padding-bottom:2px;transition:color 0.3s ease;}
+.links{
+  display: flex;
+  gap: 12px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: auto;
+  height: auto;
+  transition: transform 0.3s ease;
+  filter: drop-shadow(0 0 15px rgba(255, 255, 255, 1));
+  pointer-events: auto;
+  opacity: 1 !important;
+}
+.links:hover {
+  transform: scale(1.05);
+}
+.links a {
+  display: inline-block;
+  color: var(--neon);
+  text-decoration: none;
+  padding-bottom: 2px;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+.links a:hover {
+  transform: scale(1.25);
+}
+.links img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+}
 .footer{margin-top:20px;color:rgba(255,255,255,0.4);font-size:13px;}
 .noise{position:absolute;inset:0;z-index:-1;width:100%;height:100%;pointer-events:none}
 .custom-controls{display:flex;align-items:center;gap:12px;margin-top:12px;}
@@ -151,72 +201,6 @@ body{
   border:none;
   cursor:pointer;
 }
-.autoplay-message{color:var(--neon);font-size:14px;margin-top:10px;text-align:center;}
-@media (max-width:768px) {
-  .card {
-    padding: 20px;
-    margin: 10px;
-    width: 90%;
-  }
-  .avatar {
-    width: 80px;
-    height: 80px;
-    margin-right: 15px;
-  }
-  .handle {
-    font-size: 24px;
-  }
-  .bio {
-    font-size: 14px;
-  }
-  .stats {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  .stat {
-    padding: 8px 12px;
-  }
-  .custom-controls {
-    flex-direction: column;
-    gap: 10px;
-  }
-  .links {
-    flex-direction: column;
-    gap: 8px;
-  }
-}
-@media (max-width:480px) {
-  .stage {
-    padding: 10px;
-  }
-  .card {
-    padding: 15px;
-    width: 95%;
-  }
-  .avatar {
-    width: 60px;
-    height: 60px;
-    margin-right: 0;
-    float: none;
-    margin-bottom: 15px;
-  }
-  .handle {
-    font-size: 20px;
-  }
-  .bio {
-    font-size: 12px;
-  }
-  .stat {
-    padding: 6px 10px;
-    min-width: 80px;
-  }
-  .custom-controls button {
-    padding: 8px 16px;
-  }
-  .links a {
-    font-size: 14px;
-  }
-}
 .typewriter {
   position: relative;
   display: inline-block;
@@ -235,12 +219,81 @@ body{
 .shaking {
   animation: shake 0.15s infinite;
 }
+.biosepe {
+  width: 100%;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.2);
+  margin: 20px 0;
+  opacity: 1 !important;
+}
 @keyframes shake {
   0% { transform:translate(0,0); }
   25%{ transform:translate(-1px,1px); }
   50%{ transform:translate(1px,-1px); }
   75%{ transform:translate(-1px,-1px); }
  100%{ transform:translate(1px,1px); }
+}
+#timeDisplay {
+  color: var(--neon);
+  font-size: 14px;
+  min-width: 100px;
+  text-align: center;
+}
+#muteButton {
+  background: var(--neon);
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #000;
+  font-weight: bold;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+#muteButton:hover {
+  background: var(--accent);
+  color: #fff;
+  transform: scale(1.05);
+}
+#profileViews {
+  position: fixed;
+  right: 643px;
+  top: 223px;
+  z-index: 99999;
+  color: var(--muted);
+  text-shadow: 0 2px 18px rgba(255, 255, 255, 0.959);
+  font-size: 13px;
+  border-radius: 20px;
+  width: 120px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+#profileViews .background {
+  position: absolute;
+  width: 100px;
+  height: 100%;
+  z-index: -1;
+  border-radius: 50px;
+  background: rgba(255, 255, 255 0.1);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(6px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.45);
+}
+#profileViews .icon {
+  font-size: 26px;
+  position: absolute;
+  left: 18px;
+  z-index: 1;
+}
+#viewCount {
+  position: relative;
+  z-index: 1;
+  font-weight: 700;
+  font-family: 'Times New Roman', Times, serif;
+  margin-left: 20px;
 }
 </style>
 </head>
@@ -257,6 +310,11 @@ body{
 <div class="stage">
   <div class="grid-bg"></div>
   <main class="card" id="card">
+    <div id="profileViews" aria-hidden="true">
+      <span class="icon" aria-hidden="true">👁</span>
+      <span class="background"></span>
+      <span id="viewCount">0</span>
+    </div>
     <div class="avatar avatar-glow"><img src="assets/pics/avatar.png" alt="Avatar"></div>
     <div class="name-container">
       <h1 class="handle typewriter" id="nameType"></h1>
@@ -264,55 +322,25 @@ body{
     <div class="bio-container">
       <p class="bio typewriter" id="bio1"></p>
     </div>
-    <section class="pane">
-      <h2>Cool stuff</h2>
-      <ul class="loadout">
-        <li>Favorite: python</li>
-        <li>Learning: C#</li>
-        <li>Easiest: HTML & CSS</li>
-      </ul>
-    </section>
-    <section class="pane">
-      <h2>Stats</h2>
-      <div class="stats">
-        <div class="stat"><strong>~5</strong><span> Months</span><small>exp</small></div>
-        <div class="stat"><strong>Some</strong><span>bugs</span><small>fixed</small></div>
-        <div class="stat"><strong>2 showers</strong>this year... <small>Not really.</small></div>
-      </div>
-    </section>
-    <section class="pane">
-      <h2>Where to find me</h2>
-      <ul class="links">
-        <a>Discord: @ne8yah</a>
-      </ul>
-    </section>
-    <section class="pane">
-      <h2>Links</h2>
-        <ul class="links">
-          <li><a href="https://github.com/Ne8yah" target="_blank">Github</a></li>
-          <li><a href="https://www.roblox.com/users/665362138/profile" target="_blank">Roblox</a></li>
-        </ul>
-
-    </section>
-    <section class="pane">
-      <h2>About Me</h2>
-      <p class="bio">I love coding in Python and learning new languages like C#. When I'm not coding, you can find me playing video games or hanging out with friends.</p>
-    </section>
-    <section class="pane music-player">
-      <audio id="player" loop>
-        Your browser does not support the audio element.
-      </audio>
-      <div class="custom-controls">
-        <button id="playPause">▶</button>
-        <input type="range" id="progress" min="0" max="100" value="0" step="0.1">
-        <input type="range" id="volume" min="0" max="1" step="0.01" value="0.5">
-      </div>
-    </section>
+<div class="biosepe"></div>
+<div class="links">
+  <a href="https://discord.gg/NAFw4ykZ7n"><img src="assets/pics/discord.png" alt="Discord"></a>
+  <a href="https://github.com/Ne8yah"><img src="assets/pics/github.png" alt="GitHub"></a>
+  <a href="https://www.roblox.com"><img src="assets/pics/roblox.png" alt="Roblox"></a>
+</div>
   </main>
-  <svg class="noise" viewBox="0 0 800 600" preserveAspectRatio="none" aria-hidden>
-    <defs><filter id="grain"><feTurbulence baseFrequency="0.9" numOctaves="2" /></filter></defs>
-    <rect width="100%" height="100%" filter="url(#grain)" opacity="0.03"/>
-  </svg>
+  <div class="card music-card" id="musicCard">
+    <audio id="player" loop>
+      Your browser does not support the audio element.
+    </audio>
+    <div class="custom-controls">
+      <button id="playPause">▶</button>
+      <input type="range" id="progress" min="0" max="100" value="0" step="0.1">
+      <span id="timeDisplay">0:00 / 0:00</span>
+      <button id="muteButton">🔊</button>
+      <input type="range" id="volume" min="0" max="0.7" step="0.01" value="0.5">
+    </div>
+  </div>
 </div>
 <script>
 const musicFiles = [
@@ -325,6 +353,7 @@ function getRandomMusic() {
   return musicFiles[randomIndex];
 }
 const card = document.getElementById("card");
+const musicCard = document.getElementById("musicCard");
 let x = 0, y = 0;
 let targetX = 0, targetY = 0;
 const windowHalfX = window.innerWidth / 2;
@@ -333,6 +362,7 @@ function updatePosition() {
   x += (targetX - x) * 0.1;
   y += (targetY - y) * 0.1;
   card.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
+  musicCard.style.transform = `rotateY(${x*0.7}deg) rotateX(${y*0.7}deg)`;
   requestAnimationFrame(updatePosition);
 }
 document.addEventListener("mousemove", (e) => {
@@ -348,7 +378,6 @@ const player = document.getElementById("player");
 const playPauseBtn = document.getElementById("playPause");
 const progress = document.getElementById("progress");
 const volumeSlider = document.getElementById("volume");
-const autoplayMessage = document.getElementById("autoplayMessage");
 const startScreen = document.getElementById("startScreen");
 const bgVideo = document.getElementById("bgVideo");
 function fadeInMusic() {
@@ -356,8 +385,8 @@ function fadeInMusic() {
   player.volume = volume;
   const fade = setInterval(() => {
     volume += 0.01;
-    if (volume >= 0.5) {
-      volume = 0.5;
+    if (volume >= 0.25) {
+      volume = 0.25;
       clearInterval(fade);
     }
     player.volume = volume;
@@ -369,9 +398,7 @@ function attemptAutoplay() {
   player.play().then(() => {
     playPauseBtn.textContent = "⏸";
     fadeInMusic();
-  }).catch(() => {
-    autoplayMessage.style.display = "block";
-  });
+  }).catch(() => {});
 }
 window.addEventListener("load", () => {
   const randomMusic = getRandomMusic();
@@ -401,30 +428,54 @@ playPauseBtn.addEventListener("click", () => {
 player.addEventListener("timeupdate", () => {
   const value = (player.currentTime / player.duration) * 100 || 0;
   progress.value = value;
+  document.getElementById("timeDisplay").textContent =
+    `${formatTime(player.currentTime)} / ${formatTime(player.duration)}`;
 });
 progress.addEventListener("input", (e) => {
   player.currentTime = (e.target.value / 100) * player.duration;
 });
 volumeSlider.addEventListener("input", (e) => {
   player.volume = e.target.value;
+  muteButton.textContent = e.target.value == 0 ? "🔇" : "🔊";
 });
 player.addEventListener("error", () => {
   console.error("Error loading audio file");
-  autoplayMessage.textContent = "Error loading audio. Please try again later.";
-  autoplayMessage.style.display = "block";
 });
-const bioMsgs = [
-  "Right now I'm learning C#..",
-  "I love coding in Python...",
-  "Web development is fun!",
-  "Building cool projects every day...",
-  "14yo creature on the line.",
-  "https://gn-math.dev"
-];
+  const bioMessages = [
+    "403 forbidden",
+    "object reference not set to an instance of an object",
+    "transcending beyond this plane",
+    "winforms is so bad it's good",
+    "lost online",
+    "let go",
+    "i'm trying my best",
+    "in a world of people trying to fit in you stand out as the only one left with personality",
+    "let me out of this device",
+    "my negativity is a mirror",
+    "thank you my make-believe friends",
+    "just be yourself",
+    "an uncontrollable foreverlong mechanism",
+    "marketing at its finest",
+    "i support mostly everyone",
+    "there's nothing wrong with you",
+    "never underestimate yourself",
+    "check out my site: 127.0.0.1:3000",
+    "unable to exit this mortal plane",
+    "loud sounds i cannot control",
+    "consuming content by media",
+    "died in 2016 and in virtual hell",
+    "the stars align in an unfollowable path",
+    "from the lands of which i don't understand",
+    "why as soon as we become so close we have to say goodbye",
+    "i hate cosine",
+    "mechanical keyboards",
+    "it's just an illusion",
+    "contacting the mothership"
+  ];
 let bIndex = 0, bChar = 0, bDir = 1;
 const bioEl = document.getElementById("bio1");
 function bioLoop() {
-  const msg = bioMsgs[bIndex];
+  const msg = bioMessages[bIndex];
   if (bDir > 0) {
     bChar += 1;
     if (bChar > msg.length) {
@@ -439,7 +490,7 @@ function bioLoop() {
     bChar -= 1;
     if (bChar < 0) {
       bChar = 0;
-      bIndex = (bIndex + 1) % bioMsgs.length;
+      bIndex = (bIndex + 1) % bioMessages.length;
       bDir = 1;
       setTimeout(() => {
         bioLoop();
@@ -451,8 +502,7 @@ function bioLoop() {
   bioEl.classList.toggle("shaking", bChar > 0 && bChar < msg.length);
   setTimeout(bioLoop, bDir > 0 ? 80 : 40);
 }
-bioLoop();
-const names = ["Ne8", "giggleshitter", "0xNe8", "shitter.exe", "Nate", "biggie"];
+const names = ["Ne8", "Nate", "biggie", "king biggy", "billy. b", "billy big", "billy", "ne8yah", "Ne8yah"];
 let nIndex = 0, nChar = 0, nDir = 1;
 const nameEl = document.getElementById("nameType");
 function nameLoop() {
@@ -483,6 +533,34 @@ function nameLoop() {
   nameEl.classList.toggle("shaking", nChar > 0 && nChar < n.length);
   setTimeout(nameLoop, nDir > 0 ? 120 : 90);
 }
+function formatTime(seconds) {
+  const minutes = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+  return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+}
+const muteButton = document.getElementById("muteButton");
+muteButton.addEventListener("click", () => {
+  player.muted = !player.muted;
+  muteButton.textContent = player.muted ? "🔇" : "🔊";
+  if (player.muted) {
+    volumeSlider.value = 0;
+  } else {
+    volumeSlider.value = player.volume;
+  }
+});
+const viewCountEl = document.getElementById("viewCount");
+let count = 0;
+const increment = 5865;
+const maxCount = 1000000;
+const intervalMs = 0;
+function tickViews() {
+  count += increment;
+  if (count >= maxCount) count = 0;
+  viewCountEl.textContent = count.toLocaleString();
+}
+tickViews();
+const viewsTimer = setInterval(tickViews, intervalMs);
+bioLoop();
 nameLoop();
 </script>
 </body>
