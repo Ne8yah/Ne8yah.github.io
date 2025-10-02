@@ -7,561 +7,351 @@
 <title>Ne8yah</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap');
-:root {
+:root{
   --bg:#0b0f16;
-  --neon:#808080;
-  --accent:#636363;
-  --muted:#ffffff;
+  --neon:#5d5dff;
+  --accent:#ff3b65;
+  --muted:#cfd8ff;
+  --spin-speed:5s;
 }
+/* Reset + base */
 *{box-sizing:border-box}
 html,body{height:100%;margin:0}
 body{
   font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-  color:#ffffff;
-  overflow:hidden;
-}
-.start-screen{
-  position:fixed;
-  inset:0;
-  background:radial-gradient(circle at center,rgba(20,20,25,0.9) 0%,rgba(0,0,0,0.85) 100%);
-  backdrop-filter:blur(30px);
-  -webkit-backdrop-filter:blur(30px);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  z-index:9999;
-  transition:opacity 1s ease-in-out, transform 1s ease-in-out;
-}
-.start-content h1{
-  color:var(--neon);
-  font-size:32px;
-  letter-spacing:1.5px;
-  text-align:center;
-  text-shadow:0 0 8px rgba(182,182,182,0.8);
-  cursor:pointer;
-  animation:pulse 1.6s infinite;
-  transition:transform 0.3s ease;
-}
-.start-content h1:hover{transform:scale(1.05);}
-@keyframes pulse{0%,100%{opacity:0.65}50%{opacity:1}}
-.start-screen.fade-out{opacity:0;transform:scale(1.05);pointer-events:none}
-.bg-media{position:fixed;inset:0;z-index:-2;object-fit:cover;width:100%;height:100%;}
-.stage{
-  position:relative;
-  min-height:100vh;
+  color:#fff;
+  background:var(--bg);
   display:flex;
   flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  padding:20px;
-  perspective:1200px;
-  gap:90px;
-}
-.grid-bg{position:absolute;inset:0;background-image:linear-gradient(transparent 24px, rgba(255,255,255,0.02) 25px),linear-gradient(90deg, transparent 24px, rgba(255,255,255,0.02) 25px);background-size:25px 25px;opacity:0.3;z-index:-1;}
-.card {
-  position: relative;
-  max-width: 800px;
-  width: 100%;
-  padding: 36px;
-  border-radius: 15px;
-  z-index: 20;
-  background: rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 20px 50px rgba(0,0,0,0.6);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  gap: 15px;
-  opacity: 0;
-  animation: fadeInUp 1.5s ease-in-out both;
-  transition: transform 0.5s ease-out;
-  transform-style: preserve-3d;
-}
-.music-card {
-  max-width: 600px;
-  width: 80%;
-  padding: 24px;
-}
-@keyframes fadeInUp{from{opacity:0;transform:translateY(40px) scale(0.95);}to{opacity:1;transform:translateY(0) scale(1);}}
-.avatar{width:120px;height:120px;border-radius:100px;box-shadow:0 20px 50px rgba(0,0,0,0.6);overflow:hidden;float:left;margin-right:20px;}
-.avatar-glow {
-  box-shadow: 0 0 50px rgba(114, 114, 114, 0.8);
-  transition: box-shadow 0.3s ease-in-out;
-}
-.avatar img{width:100%;height:100%;object-fit:cover;}
-.avatar:hover {
-  transform: scale(1.25);
-  rotate: 1260deg;
-  transition: all 0.7s ease-in-out;
-}
-.name-container {
-  margin-top: 8px;
-  min-height: 60px;
-}
-.handle{
-  margin:0;
-  padding:6px 0;
-  font-size:28px;
-  letter-spacing:0.6px;
-  white-space:nowrap;
   overflow:hidden;
 }
-.bio-container {
-  margin-top: 20px;
-  min-height: 40px;
+/* Start-screen */
+.start-screen{
+  position:fixed; inset:0; z-index:9999;
+  display:flex; align-items:center; justify-content:center;
+  background: radial-gradient(circle at center, rgba(6,8,12,0.9) 0%, rgba(0,0,0,0.85) 100%);
+  backdrop-filter:blur(28px);
+  transition:opacity .9s ease, transform .9s ease;
 }
-.bio{
-  margin:0;
-  color:var(--muted);
-  line-height:1.6;
-  display:flex;
-  align-items:center;
-}
-.pane{margin-top:18px;padding-top:14px;border-top:1px dashed rgba(255,255,255,0.1);}
-.pane h2{margin:0 0 8px 0;font-size:14px;color:var(--neon);}
-.loadout{list-style:none;padding:0;margin:0;color:#cfeef0;}
-.loadout li{padding:6px 0;}
-.stats{display:flex;gap:18px;}
-.stat{background:rgba(255,255,255,0.05);padding:10px 14px;border-radius:8px;color:var(--muted);text-align:center;transition:transform 0.3s ease;}
-.stat strong{display:block;font-size:18px;color:#fff;}
-.stat small{display:block;font-size:11px;color:rgba(255,255,255,0.35);}
-.stat:hover{transform:scale(1.05);}
-.links{
-  display: flex;
-  gap: 12px;
-  padding: 0;
-  margin: 0;
-  list-style: none;
-  justify-content: center;
-  flex-wrap: wrap;
-  width: auto;
-  height: auto;
-  transition: transform 0.3s ease;
-  filter: drop-shadow(0 0 15px rgba(255, 255, 255, 1));
-  pointer-events: auto;
-  opacity: 1 !important;
-}
-.links:hover {
-  transform: scale(1.05);
-}
-.links a {
-  display: inline-block;
-  color: var(--neon);
-  text-decoration: none;
-  padding-bottom: 2px;
-  transition: color 0.3s ease, transform 0.3s ease;
-}
-.links a:hover {
-  transform: scale(1.25);
-}
-.links img {
-  width: 36px;
-  height: 36px;
-  object-fit: contain;
-}
-.footer{margin-top:20px;color:rgba(255,255,255,0.4);font-size:13px;}
-.noise{position:absolute;inset:0;z-index:-1;width:100%;height:100%;pointer-events:none}
-.custom-controls{display:flex;align-items:center;gap:12px;margin-top:12px;}
-.custom-controls button{
-  background:var(--neon);
-  border:none;
-  padding:6px 12px;
-  border-radius:6px;
+.start-screen.fade-out{opacity:0; transform:scale(1.03); pointer-events:none;}
+.start-content h1{
+  color:var(--neon);
+  text-shadow:0 0 12px rgba(157,157,255,0.8);
   cursor:pointer;
-  font-size:14px;
-  color:#000;
-  font-weight:bold;
-  transition:background 0.3s ease, transform 0.2s ease;
+  animation:pulse 1.6s infinite;
+  font-size:28px;
 }
-.custom-controls button:hover{background:var(--accent);color:#fff;transform:scale(1.05);}
-.custom-controls input[type="range"]{
-  -webkit-appearance:none;
-  appearance:none;
-  height:6px;
-  border-radius:4px;
-  background:rgba(255,255,255,0.1);
-  cursor:pointer;
-  flex:1;
+@keyframes pulse{0%,100%{opacity:.7}50%{opacity:1}}
+/* background media */
+.bg-media{position:fixed;inset:0;z-index:-2;object-fit:cover;width:100%;height:100%}
+/* stage + grid */
+.stage{flex:1;display:flex;align-items:center;justify-content:center;position:relative;padding:28px;perspective:1200px}
+.grid-bg{position:absolute;inset:0;background-image:linear-gradient(transparent 24px, rgba(255,255,255,0.02) 25px),linear-gradient(90deg, transparent 24px, rgba(255,255,255,0.02) 25px);background-size:25px 25px;opacity:0.18;z-index:-1;animation:drift 28s linear infinite}
+@keyframes drift{from{background-position:0 0}to{background-position:200px 200px}}
+/* main card (fixed size, centered) */
+.card{
+  width:480px;
+  max-width:96%;
+  height: 380px;
+  padding:36px;
+  border-radius:14px;
+  background:linear-gradient(180deg, rgba(14,16,20,0.65), rgba(6,8,12,0.55));
+  border:1px solid rgba(255,255,255,0.06);
+  box-shadow:0 18px 50px rgba(0,0,0,0.6), 0 8px 22px rgba(157,157,255,0.03) inset;
+  backdrop-filter: blur(10px);
+  animation:fadeInUp .8s ease both;
+  text-align:center;
 }
-.custom-controls input[type="range"]::-webkit-slider-thumb{
-  -webkit-appearance:none;
-  appearance:none;
-  width:14px;
-  height:14px;
+@keyframes fadeInUp{from{opacity:0;transform:translateY(20px) scale(.995)}to{opacity:1;transform:none}}
+/* avatar + halo */
+.avatar-container{position:relative;width:128px;height:128px;margin:0 auto 12px;border-radius:50%}
+.avatar-container::before{
+  content:"";
+  position:absolute;
+  top:-14px; left:-14px;
+  width:146px; height:146px;
   border-radius:50%;
-  background:var(--neon);
-  cursor:pointer;
-  transition:background 0.3s ease, transform 0.2s ease;
+  border:4px solid transparent;
+  border-top-color:var(--neon);
+  border-right-color:var(--accent);
+  filter:blur(1px) drop-shadow(0 0 12px rgba(157,157,255,0.9));
+  animation:spin var(--spin-speed) linear infinite;
+  pointer-events:none;
 }
-.custom-controls input[type="range"]::-webkit-slider-thumb:hover{background:var(--accent);transform:scale(1.2);}
-.custom-controls input[type="range"]::-moz-range-thumb{
-  width:14px;
-  height:14px;
-  border-radius:50%;
-  background:var(--neon);
-  border:none;
-  cursor:pointer;
-}
-.typewriter {
-  position: relative;
-  display: inline-block;
-}
-.typewriter::after {
-  content: '|';
-  position: absolute;
-  right: -0.2em;
-  animation: blink 0.8s step-end infinite;
-  color: var(--neon);
-}
-@keyframes blink {
-  0%,100% { opacity:1; }
-  50%     { opacity:0; }
-}
-.shaking {
-  animation: shake 0.15s infinite;
-}
-.biosepe {
-  width: 100%;
-  height: 2px;
-  background: rgba(255, 255, 255, 0.2);
-  margin: 20px 0;
-  opacity: 1 !important;
-}
-@keyframes shake {
-  0% { transform:translate(0,0); }
-  25%{ transform:translate(-1px,1px); }
-  50%{ transform:translate(1px,-1px); }
-  75%{ transform:translate(-1px,-1px); }
- 100%{ transform:translate(1px,1px); }
-}
-#timeDisplay {
-  color: var(--neon);
-  font-size: 14px;
-  min-width: 100px;
-  text-align: center;
-}
-#muteButton {
-  background: var(--neon);
-  border: none;
-  padding: 6px 10px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 14px;
-  color: #000;
-  font-weight: bold;
-  transition: background 0.3s ease, transform 0.2s ease;
-}
-#muteButton:hover {
-  background: var(--accent);
-  color: #fff;
-  transform: scale(1.05);
-}
-#profileViews {
-  position: sticky;
-  right: 643px;
-  top: 620px;
-  z-index: 99999;
-  color: var(--muted);
-  text-shadow: 0 2px 18px rgba(255, 255, 255, 0.959);
-  font-size: 13px;
-  border-radius: 20px;
-  width: 120px;
-  height: 35px;
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.avatar{width:128px;height:128px;border-radius:50%;overflow:hidden;box-shadow:0 8px 22px rgba(0,0,0,0.6),0 0 24px rgba(157,157,255,0.12);transition:transform .18s ease}
+.avatar img{width:100%;height:100%;object-fit:cover;display:block}
+/* text */
+.name-bio-container {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  pointer-events: auto;
+  gap: 20px;
 }
-#profileViews .background {
-  position: absolute;
-  width: 100px;
-  height: 100%;
-  z-index: -1;
-  border-radius: 50px;
-  background: rgba(255, 255, 255 0.1);
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(6px);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.45);
+.handle{margin:6px 0 0;font-size:28px;letter-spacing:.5px;color:linear-gradient(90deg,var(--neon),var(--accent));}
+.bio{margin:0;color:var(--muted);line-height:1.5;font-size:14px;min-height:40px}
+.links{display:flex;gap:12px;justify-content:center;margin-top: 35px}
+.links a{display:inline-flex;align-items:center;justify-content:center;transition:transform .25s ease,filter .25s}
+.links a:hover{transform:scale(1.18)}
+.links img{width:36px;height:36px}
+/* music card */
+.music-card{
+  position:fixed;left:50%;bottom:18px;transform:translateX(-50%);
+  width:640px;max-width:96%;padding:16px;border-radius:12px;
+  background:linear-gradient(180deg, rgba(6,8,12,0.75), rgba(6,8,12,0.6));
+  border:1px solid rgba(255,255,255,0.06);
+  box-shadow:0 18px 40px rgba(0,0,0,0.5);z-index:50;
+  display:flex;align-items:center;gap:12px;
 }
-#profileViews .icon {
-  font-size: 26px;
-  position: absolute;
-  left: 18px;
-  z-index: 1;
-}
-#viewCount {
-  position: relative;
-  z-index: 1;
-  font-weight: 700;
-  font-family: 'Times New Roman', Times, serif;
-  margin-left: 20px;
+/* music controls */
+.custom-controls{display:flex;align-items:center;gap:12px;flex:1}
+.custom-controls button{background:var(--neon);border:none;padding:8px 12px;border-radius:8px;cursor:pointer;font-weight:700;color:#000;transition:transform .14s}
+.custom-controls button:hover{transform:scale(1.04);background:var(--accent);color:#fff}
+.custom-controls input[type="range"]{flex:1;height:6px;background:rgba(255,255,255,0.06);border-radius:6px;-webkit-appearance:none}
+.custom-controls input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--neon);cursor:pointer}
+#timeDisplay{min-width:120px;text-align:center;color:var(--neon);font-weight:600}
+/* typewriter cursor */
+.typewriter{display:inline-block;position:relative}
+.typewriter::after{content:'|';position:absolute;right:-0.2em;animation:blink .8s step-end infinite;color:var(--neon)}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+/* responsive tweaks */
+@media (max-width:640px){
+  .card{width:92%;padding:20px}
+  .avatar{width:96px;height:96px}
+  .avatar-container::before{top:-10px;left:-10px;width:116px;height:116px}
+  .music-card{left:0;transform:none;width:100%;border-radius:12px 12px 0 0;bottom:0;padding:12px}
+  #timeDisplay{display:none}
 }
 </style>
 </head>
 <body>
-<div id="startScreen" class="start-screen">
-  <div class="start-content">
-    <h1>Tap to Continue…</h1>
+  <div id="startScreen" class="start-screen" aria-hidden="false">
+    <div class="start-content"><h1 id="startBtn">Tap to Continue…</h1></div>
   </div>
-</div>
-<video class="bg-media" id="bgVideo" autoplay loop playsinline muted>
-  <source src="assets/background/background.mp4" type="video/mp4">
-  <img src="background.jpg" alt="Background">
-</video>
-<div class="stage">
-  <div class="grid-bg"></div>
-  <main class="card" id="card">
-    <div id="profileViews" aria-hidden="true">
-      <span class="icon" aria-hidden="true">👁</span>
-      <span class="background"></span>
-      <span id="viewCount">0</span>
-    </div>
-    <div class="avatar avatar-glow"><img src="assets/pics/avatar.png" alt="Avatar"></div>
-    <div class="name-container">
-      <h1 class="handle typewriter" id="nameType"></h1>
-    </div>
-    <div class="bio-container">
-      <p class="bio typewriter" id="bio1"></p>
-    </div>
-<div class="biosepe"></div>
-<div class="links">
-  <a href="https://discord.gg/NAFw4ykZ7n"><img src="assets/pics/discord.png" alt="Discord"></a>
-  <a href="https://github.com/Ne8yah"><img src="assets/pics/github.png" alt="GitHub"></a>
-  <a href="https://www.roblox.com"><img src="assets/pics/roblox.png" alt="Roblox"></a>
-</div>
-  </main>
-  <div class="card music-card" id="musicCard">
-    <audio id="player" loop>
-      Your browser does not support the audio element.
-    </audio>
+  <video id="bgVideo" class="bg-media" autoplay loop muted playsinline>
+    <source src="assets/background/background.mp4" type="video/mp4">
+  </video>
+  <div class="stage" role="main">
+    <div class="grid-bg" aria-hidden="true"></div>
+    <main class="card" id="card" role="region" aria-label="Profile card">
+      <div class="avatar-container" id="avatarContainer" aria-hidden="false">
+        <div class="avatar" id="avatar"><img src="assets/pics/avatar.png" alt="Avatar"></div>
+      </div>
+      <div class="name-bio-container">
+        <h1 class="handle typewriter" id="nameType" aria-live="polite"></h1>
+        <p class="bio typewriter" id="bio1" aria-live="polite"></p>
+      </div>
+      <div class="links" aria-hidden="false">
+        <a href="https://discord.gg/NAFw4ykZ7n" target="_blank" rel="noopener"><img src="assets/pics/discord.png" alt="Discord"></a>
+        <a href="https://github.com/Ne8yah" target="_blank" rel="noopener"><img src="assets/pics/github.png" alt="GitHub"></a>
+        <a href="https://www.roblox.com" target="_blank" rel="noopener"><img src="assets/pics/roblox.png" alt="Roblox"></a>
+      </div>
+    </main>
+  </div>
+  <!-- Music card fixed bottom -->
+  <div class="music-card" id="musicCard" role="region" aria-label="Music player">
+    <audio id="player" preload="metadata"></audio>
     <div class="custom-controls">
-      <button id="playPause">▶</button>
-      <input type="range" id="progress" min="0" max="100" value="0" step="0.1">
+      <button id="playPause" aria-label="Play">▶</button>
+      <input id="progress" type="range" min="0" max="100" value="0" step="0.1" aria-label="Seek">
       <span id="timeDisplay">0:00 / 0:00</span>
-      <button id="muteButton">🔊</button>
-      <input type="range" id="volume" min="0" max="0.7" step="0.01" value="0.5">
+      <button id="muteButton" aria-label="Mute">🔊</button>
+      <input id="volume" type="range" min="0" max="0.7" step="0.01" value="0.5" aria-label="Volume">
     </div>
   </div>
-</div>
 <script>
+/* =========================
+   Core behavior & fixes
+   ========================= */
+/* ----- music setup ----- */
 const musicFiles = [
   "assets/music/background_music0.mp3",
   "assets/music/background_music1.mp3",
   "assets/music/background_music2.mp3"
 ];
-function getRandomMusic() {
-  const randomIndex = Math.floor(Math.random() * musicFiles.length);
-  return musicFiles[randomIndex];
+const player = document.getElementById('player');
+const playPauseBtn = document.getElementById('playPause');
+const progress = document.getElementById('progress');
+const timeDisplay = document.getElementById('timeDisplay');
+const volumeSlider = document.getElementById('volume');
+const muteButton = document.getElementById('muteButton');
+function getRandomMusic(){
+  return musicFiles[Math.floor(Math.random()*musicFiles.length)];
 }
-const card = document.getElementById("card");
-const musicCard = document.getElementById("musicCard");
-let x = 0, y = 0;
-let targetX = 0, targetY = 0;
-const windowHalfX = window.innerWidth / 2;
-const windowHalfY = window.innerHeight / 2;
-function updatePosition() {
-  x += (targetX - x) * 0.1;
-  y += (targetY - y) * 0.1;
-  card.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
-  musicCard.style.transform = `rotateY(${x*0.7}deg) rotateX(${y*0.7}deg)`;
-  requestAnimationFrame(updatePosition);
+function setRandomTrack(){
+  player.src = getRandomMusic();
+  // Reset progress bar when new track starts
+  progress.value = 0;
 }
-document.addEventListener("mousemove", (e) => {
-  targetX = (windowHalfX - e.pageX) / 40;
-  targetY = (windowHalfY - e.pageY) / 40;
+/* fade in helper */
+function fadeInMusic(target = 0.25, step = 0.01, every = 100){
+  let v = Math.max(0.01, player.volume || 0.01);
+  player.volume = v;
+  const t = setInterval(()=>{
+    v = +(v + step).toFixed(3);
+    if(v >= target){ player.volume = target; clearInterval(t); }
+    else player.volume = v;
+    volumeSlider.value = player.volume;
+  }, every);
+}
+/* gracefully attempt autoplay (may be blocked on mobile) */
+window.addEventListener('load', ()=>{
+  setRandomTrack();
+  // don't force-play; wait for user tap (start screen). but try to load metadata
+  player.addEventListener('loadedmetadata', ()=> {
+    updateTimeDisplay(); // in case metadata arrived
+  });
 });
-updatePosition();
-document.addEventListener("mouseleave", () => {
-  targetX = 0;
-  targetY = 0;
+/* play/pause */
+playPauseBtn.addEventListener('click', ()=>{
+  if(player.paused){ player.play().then(()=>{ playPauseBtn.textContent='⏸'; }).catch(()=>{ /* blocked */ }); }
+  else { player.pause(); playPauseBtn.textContent='▶'; }
 });
-const player = document.getElementById("player");
-const playPauseBtn = document.getElementById("playPause");
-const progress = document.getElementById("progress");
-const volumeSlider = document.getElementById("volume");
-const startScreen = document.getElementById("startScreen");
-const bgVideo = document.getElementById("bgVideo");
-function fadeInMusic() {
-  let volume = 0.01;
-  player.volume = volume;
-  const fade = setInterval(() => {
-    volume += 0.01;
-    if (volume >= 0.25) {
-      volume = 0.25;
-      clearInterval(fade);
-    }
-    player.volume = volume;
-    volumeSlider.value = volume;
-  }, 100);
-}
-function attemptAutoplay() {
-  player.volume = 0.01;
-  player.play().then(() => {
-    playPauseBtn.textContent = "⏸";
-    fadeInMusic();
-  }).catch(() => {});
-}
-window.addEventListener("load", () => {
-  const randomMusic = getRandomMusic();
-  player.src = randomMusic;
-  attemptAutoplay();
-});
-function startExperience() {
-  startScreen.classList.add("fade-out");
-  bgVideo.play().catch(() => {});
-  if (player.paused) {
-    player.play().then(() => {
-      playPauseBtn.textContent = "⏸";
-      fadeInMusic();
-    });
-  }
-}
-startScreen.addEventListener("click", startExperience);
-playPauseBtn.addEventListener("click", () => {
-  if (player.paused) {
-    player.play();
-    playPauseBtn.textContent = "⏸";
+/* update progress/time */
+player.addEventListener('timeupdate', ()=>{
+  if(isFinite(player.duration) && player.duration > 0){
+    progress.value = (player.currentTime / player.duration) * 100;
   } else {
-    player.pause();
-    playPauseBtn.textContent = "▶";
+    progress.value = 0;
+  }
+  updateTimeDisplay();
+});
+player.addEventListener('loadedmetadata', updateTimeDisplay);
+/* Modified ended event listener to loop music */
+player.addEventListener('ended', ()=>{
+  setRandomTrack();
+  player.play().then(() => {
+    playPauseBtn.textContent = '⏸';
+  }).catch(() => {
+    playPauseBtn.textContent = '▶';
+  });
+});
+/* seek functionality with better error handling */
+progress.addEventListener('input', (e)=>{
+  if(isFinite(player.duration) && player.duration > 0){
+    player.currentTime = (e.target.value / 100) * player.duration;
   }
 });
-player.addEventListener("timeupdate", () => {
-  const value = (player.currentTime / player.duration) * 100 || 0;
-  progress.value = value;
-  document.getElementById("timeDisplay").textContent =
-    `${formatTime(player.currentTime)} / ${formatTime(player.duration)}`;
+/* volume & mute */
+volumeSlider.addEventListener('input', (e)=>{
+  player.volume = parseFloat(e.target.value);
+  muteButton.textContent = player.volume <= 0 ? '🔇' : '🔊';
 });
-progress.addEventListener("input", (e) => {
-  player.currentTime = (e.target.value / 100) * player.duration;
+muteButton.addEventListener('click', ()=>{
+  player.muted = !player.muted;
+  muteButton.textContent = player.muted ? '🔇' : '🔊';
+  if(player.muted) volumeSlider.value = 0;
+  else volumeSlider.value = player.volume || 0.5;
 });
-volumeSlider.addEventListener("input", (e) => {
-  player.volume = e.target.value;
-  muteButton.textContent = e.target.value == 0 ? "🔇" : "🔊";
-});
-player.addEventListener("error", () => {
-  console.error("Error loading audio file");
-});
-  const bioMessages = [
-    "403 forbidden",
-    "object reference not set to an instance of an object",
-    "transcending beyond this plane",
-    "winforms is so bad it's good",
-    "lost online",
-    "let go",
-    "i'm trying my best",
-    "in a world of people trying to fit in you stand out as the only one left with personality",
-    "let me out of this device",
-    "my negativity is a mirror",
-    "thank you my make-believe friends",
-    "just be yourself",
-    "an uncontrollable foreverlong mechanism",
-    "marketing at its finest",
-    "i support mostly everyone",
-    "there's nothing wrong with you",
-    "never underestimate yourself",
-    "check out my site: 127.0.0.1:3000",
-    "unable to exit this mortal plane",
-    "loud sounds i cannot control",
-    "consuming content by media",
-    "died in 2016 and in virtual hell",
-    "the stars align in an unfollowable path",
-    "from the lands of which i don't understand",
-    "why as soon as we become so close we have to say goodbye",
-    "i hate cosine",
-    "mechanical keyboards",
-    "it's just an illusion",
-    "contacting the mothership"
-  ];
+/* time format helper */
+function formatTime(seconds){
+  if(!isFinite(seconds) || seconds <= 0) return '0:00';
+  const m = Math.floor(seconds/60);
+  const s = Math.floor(seconds % 60);
+  return `${m}:${s < 10 ? '0'+s : s}`;
+}
+function updateTimeDisplay(){
+  const cur = formatTime(player.currentTime || 0);
+  const dur = formatTime(player.duration || 0);
+  timeDisplay.textContent = `${cur} / ${dur}`;
+}
+/* ----- start experience (start screen) ----- */
+const startScreen = document.getElementById('startScreen');
+const startBtn = document.getElementById('startBtn');
+const bgVideo = document.getElementById('bgVideo');
+function startExperience(){
+  startScreen.classList.add('fade-out');
+  if(!player.src) setRandomTrack();
+  player.play().then(()=>{ playPauseBtn.textContent = '⏸'; fadeInMusic(); }).catch(()=>{  });
+  bgVideo.play().catch(()=>{});
+}
+startBtn.addEventListener('click', startExperience);
+startScreen.addEventListener('click', startExperience);
+/* ----- typewriter loops ----- */
+const bioMessages = [
+  "403 forbidden",
+  "object reference not set to an instance of an object",
+  "transcending beyond this plane",
+  "winforms is so bad it's good",
+  "lost online",
+  "i'm trying my best",
+  "just be yourself",
+  "marketing at its finest",
+  "never underestimate yourself",
+  "contacting the mothership",
+  "Biggie Biggie can't you seeeeeee"
+];
 let bIndex = 0, bChar = 0, bDir = 1;
-const bioEl = document.getElementById("bio1");
-function bioLoop() {
+const bioEl = document.getElementById('bio1');
+function bioLoop(){
   const msg = bioMessages[bIndex];
-  if (bDir > 0) {
-    bChar += 1;
-    if (bChar > msg.length) {
+  if(bDir > 0){
+    bChar++;
+    if(bChar > msg.length){
       bChar = msg.length;
-      setTimeout(() => {
-        bDir = -1;
-        bioLoop();
-      }, 1500);
+      setTimeout(()=>{ bDir = -1; bioLoop(); }, 1500);
       return;
     }
   } else {
-    bChar -= 1;
-    if (bChar < 0) {
+    bChar--;
+    if(bChar < 0){
       bChar = 0;
       bIndex = (bIndex + 1) % bioMessages.length;
       bDir = 1;
-      setTimeout(() => {
-        bioLoop();
-      }, 500);
+      setTimeout(bioLoop, 420);
       return;
     }
   }
   bioEl.textContent = msg.slice(0, bChar);
-  bioEl.classList.toggle("shaking", bChar > 0 && bChar < msg.length);
-  setTimeout(bioLoop, bDir > 0 ? 80 : 40);
+  setTimeout(bioLoop, bDir > 0 ? 60 : 36);
 }
-const names = ["Ne8", "Nate", "biggie", "king biggy", "billy. b", "billy big", "billy", "ne8yah", "Ne8yah"];
-let nIndex = 0, nChar = 0, nDir = 1;
-const nameEl = document.getElementById("nameType");
-function nameLoop() {
+bioLoop();
+const names = ["Ne8","Nate","king biggy","billy big","ne8yah"];
+let nIndex=0,nChar=0,nDir=1;
+const nameEl = document.getElementById('nameType');
+function nameLoop(){
   const n = names[nIndex];
-  if (nDir > 0) {
-    nChar += 1;
-    if (nChar > n.length) {
+  if(nDir > 0){
+    nChar++;
+    if(nChar > n.length){
       nChar = n.length;
-      setTimeout(() => {
-        nDir = -1;
-        nameLoop();
-      }, 1000);
+      setTimeout(()=>{ nDir = -1; nameLoop(); }, 1500);
       return;
     }
   } else {
-    nChar -= 1;
-    if (nChar < 0) {
+    nChar--;
+    if(nChar < 0){
       nChar = 0;
       nIndex = (nIndex + 1) % names.length;
       nDir = 1;
-      setTimeout(() => {
-        nameLoop();
-      }, 500);
+      setTimeout(nameLoop, 500);
       return;
     }
   }
-  nameEl.textContent = n.slice(0, nChar);
-  nameEl.classList.toggle("shaking", nChar > 0 && nChar < n.length);
-  setTimeout(nameLoop, nDir > 0 ? 120 : 90);
+  nameEl.textContent = nChar === 0 ? '\u00A0' : n.slice(0, nChar);
+  setTimeout(nameLoop, nDir > 0 ? 150 : 80);
 }
-function formatTime(seconds) {
-  const minutes = Math.floor(seconds / 60);
-  const secs = Math.floor(seconds % 60);
-  return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
-}
-const muteButton = document.getElementById("muteButton");
-muteButton.addEventListener("click", () => {
-  player.muted = !player.muted;
-  muteButton.textContent = player.muted ? "🔇" : "🔊";
-  if (player.muted) {
-    volumeSlider.value = 0;
-  } else {
-    volumeSlider.value = player.volume;
-  }
-});
-const viewCountEl = document.getElementById("viewCount");
-let count = 0;
-const increment = 5865;
-const maxCount = 1000000;
-const intervalMs = 0;
-function tickViews() {
-  count += increment;
-  if (count >= maxCount) count = 0;
-  viewCountEl.textContent = count.toLocaleString();
-}
-tickViews();
-const viewsTimer = setInterval(tickViews, intervalMs);
-bioLoop();
 nameLoop();
+/* ----- avatar halo spin control ----- */
+const avatarContainer = document.getElementById('avatarContainer');
+const avatar = document.getElementById('avatar');
+let spinSpeed = 6;
+const DEFAULT_SPIN = 6;
+avatar.addEventListener('click', ()=>{
+  spinSpeed = Math.max(0.4, +(spinSpeed - 0.6).toFixed(2));
+  avatarContainer.style.setProperty('--spin-speed', spinSpeed + 's');
+  avatar.style.transform = 'scale(1.06)';
+  clearTimeout(avatar._popTimeout);
+  avatar._popTimeout = setTimeout(()=>{ avatar.style.transform = ''; }, 200);
+  clearTimeout(avatarContainer._resetTimer);
+  avatarContainer._resetTimer = setTimeout(()=>{
+    spinSpeed = DEFAULT_SPIN;
+    avatarContainer.style.setProperty('--spin-speed', DEFAULT_SPIN + 's');
+  }, 3500);
+});
+avatar.setAttribute('tabindex', '0');
+avatar.addEventListener('keydown', (e)=>{ if(e.key === 'Enter' || e.key === ' ') avatar.click(); });
 </script>
 </body>
 </html>
